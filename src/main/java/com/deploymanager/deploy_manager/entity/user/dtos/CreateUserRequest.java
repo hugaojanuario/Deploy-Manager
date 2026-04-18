@@ -12,5 +12,5 @@ public record CreateUserRequest (
 
         @NotBlank String password,
 
-        @NotNull UserRole userRole) {
+        @NotNull UserRole role) {
 }
