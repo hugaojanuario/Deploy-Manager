@@ -1,9 +1,9 @@
 package com.deploymanager.deploy_manager.controller;
 
-import com.deploymanager.deploy_manager.entity.user.dtos.CreateUserRequest;
-import com.deploymanager.deploy_manager.entity.user.dtos.UpdatePasswordUserRequest;
-import com.deploymanager.deploy_manager.entity.user.dtos.UpdateUserRequest;
-import com.deploymanager.deploy_manager.entity.user.dtos.UserResponse;
+import com.deploymanager.deploy_manager.entity.user.dtos.CreateUserRequestDTO;
+import com.deploymanager.deploy_manager.entity.user.dtos.UpdatePasswordUserRequestDTO;
+import com.deploymanager.deploy_manager.entity.user.dtos.UpdateUserRequestDTO;
+import com.deploymanager.deploy_manager.entity.user.dtos.UserResponseDTO;
 import com.deploymanager.deploy_manager.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class UserController {
     private final UserService service;
 
     @PostMapping
-    public ResponseEntity<UserResponse> create (@Valid @RequestBody CreateUserRequest request, UriComponentsBuilder uriComponentsBuilder){
+    public ResponseEntity<UserResponseDTO> create (@Valid @RequestBody CreateUserRequestDTO request, UriComponentsBuilder uriComponentsBuilder){
         var newUser = service.createUser(request);
         var uri = uriComponentsBuilder.path("/api/users/{id}").buildAndExpand(newUser.id()).toUri();
 
@@ -31,28 +31,28 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<UserResponse>> getAll (@PageableDefault(size = 5) Pageable pageable){
+    public ResponseEntity<Page<UserResponseDTO>> getAll (@PageableDefault(size = 5) Pageable pageable){
         var user = service.getAll(pageable);
 
         return ResponseEntity.ok(user);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getById(@PathVariable UUID id){
+    public ResponseEntity<UserResponseDTO> getById(@PathVariable UUID id){
         var user = service.getById(id);
 
         return ResponseEntity.ok(user);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> update (@PathVariable UUID id, @Valid @RequestBody UpdateUserRequest request){
+    public ResponseEntity<UserResponseDTO> update (@PathVariable UUID id, @Valid @RequestBody UpdateUserRequestDTO request){
         var updateUser = service.update(id, request);
 
         return ResponseEntity.ok(updateUser);
     }
 
     @PatchMapping("/{id}/password")
-    public ResponseEntity<UserResponse> updatePassword (@Valid @PathVariable UUID id, @Valid @RequestBody UpdatePasswordUserRequest request){
+    public ResponseEntity<UserResponseDTO> updatePassword (@Valid @PathVariable UUID id, @Valid @RequestBody UpdatePasswordUserRequestDTO request){
         var updatePasswordUser = service.updatePassword(id, request);
 
         return ResponseEntity.ok(updatePasswordUser);

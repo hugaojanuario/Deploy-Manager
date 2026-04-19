@@ -1,9 +1,9 @@
 package com.deploymanager.deploy_manager.controller;
 
 
-import com.deploymanager.deploy_manager.entity.client.dtos.ClientPrivateResponse;
-import com.deploymanager.deploy_manager.entity.client.dtos.CreateClientRequest;
-import com.deploymanager.deploy_manager.entity.client.dtos.UpdateClientRequest;
+import com.deploymanager.deploy_manager.entity.client.dtos.ClientPrivateResponseDTO;
+import com.deploymanager.deploy_manager.entity.client.dtos.CreateClientRequestDTO;
+import com.deploymanager.deploy_manager.entity.client.dtos.UpdateClientRequestDTO;
 import com.deploymanager.deploy_manager.service.ClientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class ClientController {
     private final ClientService service;
 
     @PostMapping
-    public ResponseEntity <ClientPrivateResponse> create (@RequestBody @Valid CreateClientRequest request, UriComponentsBuilder uriBuilder){
+    public ResponseEntity <ClientPrivateResponseDTO> create (@RequestBody @Valid CreateClientRequestDTO request, UriComponentsBuilder uriBuilder){
         var newClient = service.create(request);
         var uri = uriBuilder.path("/api/clients/{id}").buildAndExpand(newClient.id()).toUri();
 
@@ -54,7 +54,7 @@ public class ClientController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity <ClientPrivateResponse> update (@PathVariable UUID id, @RequestBody @Valid UpdateClientRequest request){
+    public ResponseEntity <ClientPrivateResponseDTO> update (@PathVariable UUID id, @RequestBody @Valid UpdateClientRequestDTO request){
         var user = service.update(id, request);
 
         return ResponseEntity.ok().body(user);

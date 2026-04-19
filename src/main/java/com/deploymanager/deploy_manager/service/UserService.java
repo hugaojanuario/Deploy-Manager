@@ -1,10 +1,10 @@
 package com.deploymanager.deploy_manager.service;
 
 import com.deploymanager.deploy_manager.entity.user.User;
-import com.deploymanager.deploy_manager.entity.user.dtos.CreateUserRequest;
-import com.deploymanager.deploy_manager.entity.user.dtos.UpdatePasswordUserRequest;
-import com.deploymanager.deploy_manager.entity.user.dtos.UpdateUserRequest;
-import com.deploymanager.deploy_manager.entity.user.dtos.UserResponse;
+import com.deploymanager.deploy_manager.entity.user.dtos.CreateUserRequestDTO;
+import com.deploymanager.deploy_manager.entity.user.dtos.UpdatePasswordUserRequestDTO;
+import com.deploymanager.deploy_manager.entity.user.dtos.UpdateUserRequestDTO;
+import com.deploymanager.deploy_manager.entity.user.dtos.UserResponseDTO;
 import com.deploymanager.deploy_manager.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,7 +20,7 @@ public class UserService {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserResponse createUser (CreateUserRequest request){
+    public UserResponseDTO createUser (CreateUserRequestDTO request){
         User user = new User();
 
         user.setName(request.name());
@@ -30,21 +30,21 @@ public class UserService {
         user.setActive(true);
 
         User saved = repository.save(user);
-        return new UserResponse(saved);
+        return new UserResponseDTO(saved);
     }
 
-    public Page<UserResponse> getAll (Pageable pageable){
-        return repository.findByActiveTrue(pageable).map(UserResponse :: new);
+    public Page<UserResponseDTO> getAll (Pageable pageable){
+        return repository.findByActiveTrue(pageable).map(UserResponseDTO:: new);
     }
 
-    public UserResponse getById(UUID id){
+    public UserResponseDTO getById(UUID id){
         User user = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException());
 
-        return new UserResponse(user);
+        return new UserResponseDTO(user);
     }
 
-    public UserResponse update (UUID id, UpdateUserRequest request){
+    public UserResponseDTO update (UUID id, UpdateUserRequestDTO request){
         User user = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException());
 
@@ -57,10 +57,10 @@ public class UserService {
 
         User updated = repository.save(user);
 
-        return new UserResponse(updated);
+        return new UserResponseDTO(updated);
     }
 
-    public UserResponse updatePassword (UUID id, UpdatePasswordUserRequest request){
+    public UserResponseDTO updatePassword (UUID id, UpdatePasswordUserRequestDTO request){
         User user = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException());
 
@@ -70,7 +70,7 @@ public class UserService {
 
         User updated = repository.save(user);
 
-        return new UserResponse(updated);
+        return new UserResponseDTO(updated);
     }
 
     public void softDelete (UUID id){

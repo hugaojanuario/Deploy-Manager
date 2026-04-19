@@ -6,7 +6,7 @@ import com.deploymanager.deploy_manager.entity.client.enums.TypeServerClient;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record ClientPublicResponse(
+public record ClientPublicResponseDTO(
         UUID id,
         String name,
         String anydeskId,
@@ -16,7 +16,7 @@ public record ClientPublicResponse(
         String notes,
         LocalDateTime createdAt
 ) {
-    public ClientPublicResponse(Client client){
+    public ClientPublicResponseDTO(Client client){
         this(
                 client.getId(),
                 client.getName(),

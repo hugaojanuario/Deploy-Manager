@@ -1,10 +1,8 @@
 package com.deploymanager.deploy_manager.entity.client.dtos;
 
 import com.deploymanager.deploy_manager.entity.client.enums.TypeServerClient;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
-public record UpdateClientRequest(
+public record UpdateClientRequestDTO(
         String name,
         String anydeskId,
         String anydeskPassword,

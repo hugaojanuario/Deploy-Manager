@@ -1,10 +1,10 @@
 package com.deploymanager.deploy_manager.service;
 
 import com.deploymanager.deploy_manager.entity.client.Client;
-import com.deploymanager.deploy_manager.entity.client.dtos.ClientPrivateResponse;
-import com.deploymanager.deploy_manager.entity.client.dtos.ClientPublicResponse;
-import com.deploymanager.deploy_manager.entity.client.dtos.CreateClientRequest;
-import com.deploymanager.deploy_manager.entity.client.dtos.UpdateClientRequest;
+import com.deploymanager.deploy_manager.entity.client.dtos.ClientPrivateResponseDTO;
+import com.deploymanager.deploy_manager.entity.client.dtos.ClientPublicResponseDTO;
+import com.deploymanager.deploy_manager.entity.client.dtos.CreateClientRequestDTO;
+import com.deploymanager.deploy_manager.entity.client.dtos.UpdateClientRequestDTO;
 import com.deploymanager.deploy_manager.entity.user.User;
 import com.deploymanager.deploy_manager.repository.ClientRepository;
 import com.deploymanager.deploy_manager.repository.UserRepository;
@@ -22,7 +22,7 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final UserRepository userRepository;
 
-    public ClientPrivateResponse create (CreateClientRequest request){
+    public ClientPrivateResponseDTO create (CreateClientRequestDTO request){
         User user = userRepository.findById(request.createdBy())
                 .orElseThrow(() -> new RuntimeException());
 
@@ -47,32 +47,32 @@ public class ClientService {
 
         Client saved = clientRepository.save(client);
 
-        return new ClientPrivateResponse(saved);
+        return new ClientPrivateResponseDTO(saved);
     }
 
-    public Page<ClientPrivateResponse> getAllForAdmin (Pageable pageable){
-        return clientRepository.findByActiveTrue(pageable).map(ClientPrivateResponse :: new);
+    public Page<ClientPrivateResponseDTO> getAllForAdmin (Pageable pageable){
+        return clientRepository.findByActiveTrue(pageable).map(ClientPrivateResponseDTO:: new);
     }
 
-    public Page<ClientPublicResponse> getAllForUser (Pageable pageable){
-        return clientRepository.findByActiveTrue(pageable).map(ClientPublicResponse :: new);
+    public Page<ClientPublicResponseDTO> getAllForUser (Pageable pageable){
+        return clientRepository.findByActiveTrue(pageable).map(ClientPublicResponseDTO:: new);
     }
 
-    public ClientPrivateResponse getByIdForAdmin (UUID id){
+    public ClientPrivateResponseDTO getByIdForAdmin (UUID id){
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException());
 
-        return new ClientPrivateResponse(client);
+        return new ClientPrivateResponseDTO(client);
     }
 
-    public ClientPublicResponse getByIdForUser (UUID id){
+    public ClientPublicResponseDTO getByIdForUser (UUID id){
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException());
 
-        return new ClientPublicResponse(client);
+        return new ClientPublicResponseDTO(client);
     }
 
-    public ClientPrivateResponse update (UUID id, UpdateClientRequest request){
+    public ClientPrivateResponseDTO update (UUID id, UpdateClientRequestDTO request){
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException());
 
@@ -94,7 +94,7 @@ public class ClientService {
 
         Client updated = clientRepository.save(client);
 
-        return new ClientPrivateResponse(updated);
+        return new ClientPrivateResponseDTO(updated);
     }
 
     public void softDelete (UUID id){

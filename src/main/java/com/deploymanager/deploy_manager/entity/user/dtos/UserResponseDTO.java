@@ -6,14 +6,14 @@ import com.deploymanager.deploy_manager.entity.user.enums.UserRole;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record UserResponse (
+public record UserResponseDTO(
         UUID id,
         String name,
         String email,
         UserRole role,
         Boolean active,
         LocalDateTime createdAt) {
-    public UserResponse (User user){
+    public UserResponseDTO(User user){
         this(
                 user.getId(),
                 user.getName(),

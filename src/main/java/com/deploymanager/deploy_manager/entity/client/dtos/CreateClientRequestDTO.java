@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
-public record CreateClientRequest (
+public record CreateClientRequestDTO(
         @NotBlank String name,
         String anydeskId,
         String anydeskPassword,
