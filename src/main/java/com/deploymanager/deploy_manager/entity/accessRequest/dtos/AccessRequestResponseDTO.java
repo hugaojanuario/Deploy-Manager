@@ -1,7 +1,7 @@
 package com.deploymanager.deploy_manager.entity.accessRequest.dtos;
 
+import com.deploymanager.deploy_manager.entity.accessRequest.AccessRequest;
 import com.deploymanager.deploy_manager.entity.accessRequest.enums.AccessStatus;
-import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -17,4 +17,17 @@ public record AccessRequestResponseDTO(
         LocalDateTime respondedAt,
         LocalDateTime expiresAt
 ) {
+    public AccessRequestResponseDTO(AccessRequest accessRequest) {
+        this(
+                accessRequest.getId(),
+                accessRequest.getClient().getId(),
+                accessRequest.getRequester().getId(),
+                accessRequest.getApprover() != null ? accessRequest.getApprover().getId() : null,
+                accessRequest.getStatus(),
+                accessRequest.getReason(),
+                accessRequest.getRequestedAt(),
+                accessRequest.getRespondedAt(),
+                accessRequest.getExpiresAt()
+        );
+    }
 }

@@ -1,5 +1,6 @@
 package com.deploymanager.deploy_manager.entity.accessRequest.dtos;
 
+import com.deploymanager.deploy_manager.entity.accessRequest.AccessRequest;
 import com.deploymanager.deploy_manager.entity.accessRequest.enums.AccessStatus;
 import com.deploymanager.deploy_manager.entity.client.enums.TypeServerClient;
 
@@ -29,4 +30,24 @@ public record ApprovedAccessResponseDTO(
         String dbUser,
         String dbPassword
 ) {
+    public ApprovedAccessResponseDTO(AccessRequest accessRequest) {
+        this(
+                accessRequest.getId(),
+                accessRequest.getClient().getId(),
+                accessRequest.getClient().getName(),
+                accessRequest.getStatus(),
+                accessRequest.getExpiresAt(),
+                accessRequest.getClient().getAnydeskId(),
+                accessRequest.getClient().getAnydeskPassword(),
+                accessRequest.getClient().getTeamviewerId(),
+                accessRequest.getClient().getTeamviewerPassword(),
+                accessRequest.getClient().getAnyviewerId(),
+                accessRequest.getClient().getAnyviewerPassword(),
+                accessRequest.getClient().getServer(),
+                accessRequest.getClient().getServerUsername(),
+                accessRequest.getClient().getServerPassword(),
+                accessRequest.getClient().getDbUser(),
+                accessRequest.getClient().getDbPassword()
+        );
+    }
 }
