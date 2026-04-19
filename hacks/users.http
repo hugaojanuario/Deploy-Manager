@@ -1,0 +1,64 @@
+### Variáveis — edite conforme seu ambiente
+@baseUrl = http://localhost:8080
+@contentType = application/json
+@token = seu-access-token-aqui
+@userId = 00000000-0000-0000-0000-000000000000
+
+### Listar todos os usuários (ADMIN)
+GET {{baseUrl}}/api/users
+Authorization: Bearer {{token}}
+
+### Meu perfil (autenticado)
+GET {{baseUrl}}/api/users/me
+Authorization: Bearer {{token}}
+
+### Buscar usuário por ID (ADMIN)
+GET {{baseUrl}}/api/users/{{userId}}
+Authorization: Bearer {{token}}
+
+### Criar usuário (ADMIN)
+POST {{baseUrl}}/api/users
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "name": "João Silva",
+  "email": "joao.silva@empresa.com",
+  "password": "senha123",
+  "role": "USER"
+}
+
+### Criar admin (ADMIN)
+POST {{baseUrl}}/api/users
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "name": "Maria Lider",
+  "email": "maria.lider@empresa.com",
+  "password": "senha123",
+  "role": "ADMIN"
+}
+
+### Atualizar usuário (ADMIN)
+PUT {{baseUrl}}/api/users/{{userId}}
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "name": "João Silva Atualizado",
+  "role": "USER"
+}
+
+### Alterar senha (ADMIN ou o próprio usuário)
+PATCH {{baseUrl}}/api/users/{{userId}}/password
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "password": "novaSenha456"
+}
+
+### Desativar usuário — soft delete (ADMIN)
+DELETE {{baseUrl}}/api/users/{{userId}}
+Authorization: Bearer {{token}}

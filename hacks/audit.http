@@ -1,0 +1,34 @@
+### Variáveis — edite conforme seu ambiente
+@baseUrl = http://localhost:8080
+@token = seu-access-token-aqui
+@auditId = 00000000-0000-0000-0000-000000000000
+@userId = 00000000-0000-0000-0000-000000000000
+@clientId = 00000000-0000-0000-0000-000000000000
+
+### Listar logs de auditoria (ADMIN)
+GET {{baseUrl}}/api/audit
+Authorization: Bearer {{token}}
+
+### Filtrar por usuário (ADMIN)
+GET {{baseUrl}}/api/audit?userId={{userId}}
+Authorization: Bearer {{token}}
+
+### Filtrar por cliente (ADMIN)
+GET {{baseUrl}}/api/audit?clientId={{clientId}}
+Authorization: Bearer {{token}}
+
+### Filtrar por ação (ADMIN)
+GET {{baseUrl}}/api/audit?action=CREDENTIAL_VIEWED
+Authorization: Bearer {{token}}
+
+### Filtrar por período (ADMIN)
+GET {{baseUrl}}/api/audit?dateFrom=2026-04-01T00:00:00&dateTo=2026-04-30T23:59:59
+Authorization: Bearer {{token}}
+
+### Detalhe de um log (ADMIN)
+GET {{baseUrl}}/api/audit/{{auditId}}
+Authorization: Bearer {{token}}
+
+### Exportar CSV (ADMIN)
+GET {{baseUrl}}/api/audit/export
+Authorization: Bearer {{token}}

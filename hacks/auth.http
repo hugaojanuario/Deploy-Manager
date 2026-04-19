@@ -1,0 +1,25 @@
+### Variáveis — edite conforme seu ambiente
+@baseUrl = http://localhost:8080
+@contentType = application/json
+
+### Login
+POST {{baseUrl}}/api/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@deploymanager.com",
+  "password": "senha123"
+}
+
+### Renovar access token
+POST {{baseUrl}}/api/auth/refresh
+Content-Type: {{contentType}}
+
+{
+  "refreshToken": "seu-refresh-token-aqui"
+}
+
+### Logout
+POST {{baseUrl}}/api/auth/logout
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}

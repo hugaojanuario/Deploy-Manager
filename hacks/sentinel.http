@@ -1,0 +1,25 @@
+### Variáveis — edite conforme seu ambiente
+@baseUrl = http://localhost:8080
+@token = seu-access-token-aqui
+@clientId = 00000000-0000-0000-0000-000000000000
+@containerId = nome-ou-id-do-container
+
+### Verificar se o agente Sentinel está online (ADMIN)
+GET {{baseUrl}}/api/clients/{{clientId}}/sentinel/health
+Authorization: Bearer {{token}}
+
+### Listar containers Docker do cliente (ADMIN)
+GET {{baseUrl}}/api/clients/{{clientId}}/sentinel/containers
+Authorization: Bearer {{token}}
+
+### Estatísticas de CPU e RAM de um container (ADMIN)
+GET {{baseUrl}}/api/clients/{{clientId}}/sentinel/containers/{{containerId}}/stats
+Authorization: Bearer {{token}}
+
+### Últimas 50 linhas de log de um container (ADMIN)
+GET {{baseUrl}}/api/clients/{{clientId}}/sentinel/containers/{{containerId}}/logs
+Authorization: Bearer {{token}}
+
+### Reiniciar container (ADMIN)
+POST {{baseUrl}}/api/clients/{{clientId}}/sentinel/containers/{{containerId}}/restart
+Authorization: Bearer {{token}}

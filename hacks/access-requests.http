@@ -1,0 +1,45 @@
+### Variáveis — edite conforme seu ambiente
+@baseUrl = http://localhost:8080
+@contentType = application/json
+@token = seu-access-token-aqui
+@requestId = 00000000-0000-0000-0000-000000000000
+@clientId = 00000000-0000-0000-0000-000000000000
+
+### Criar solicitação de acesso (USER)
+POST {{baseUrl}}/api/access-requests
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "clientId": "{{clientId}}",
+  "reason": "Preciso acessar o servidor para investigar lentidão reportada pelo cliente"
+}
+
+### Minhas solicitações (USER)
+GET {{baseUrl}}/api/access-requests/mine
+Authorization: Bearer {{token}}
+
+### Listar todas as solicitações com filtro por status (ADMIN)
+GET {{baseUrl}}/api/access-requests?status=PENDING
+Authorization: Bearer {{token}}
+
+### Listar solicitações pendentes (ADMIN)
+GET {{baseUrl}}/api/access-requests/pending
+Authorization: Bearer {{token}}
+
+### Detalhe de uma solicitação (autenticado)
+GET {{baseUrl}}/api/access-requests/{{requestId}}
+Authorization: Bearer {{token}}
+
+### Aprovar solicitação — retorna credenciais descriptografadas (ADMIN)
+PATCH {{baseUrl}}/api/access-requests/{{requestId}}/approve
+Authorization: Bearer {{token}}
+
+### Rejeitar solicitação com motivo (ADMIN)
+PATCH {{baseUrl}}/api/access-requests/{{requestId}}/reject
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "reason": "Acesso não autorizado para este cliente neste momento. Entre em contato com o líder responsável."
+}

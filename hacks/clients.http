@@ -1,0 +1,93 @@
+### Variáveis — edite conforme seu ambiente
+@baseUrl = http://localhost:8080
+@contentType = application/json
+@token = seu-access-token-aqui
+@clientId = 00000000-0000-0000-0000-000000000000
+@adminUserId = 00000000-0000-0000-0000-000000000000
+
+### Listar clientes (autenticado — ADMIN vê tudo, USER não vê senhas)
+GET {{baseUrl}}/api/clients
+Authorization: Bearer {{token}}
+
+### Buscar cliente por ID
+GET {{baseUrl}}/api/clients/{{clientId}}
+Authorization: Bearer {{token}}
+
+### Buscar credenciais completas — gera AuditLog (ADMIN)
+GET {{baseUrl}}/api/clients/{{clientId}}/credentials
+Authorization: Bearer {{token}}
+
+### Criar cliente com AnyDesk e acesso Windows (ADMIN)
+POST {{baseUrl}}/api/clients
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "name": "Cliente ABC Ltda",
+  "anydeskId": "123456789",
+  "anydeskPassword": "anydesk-pass",
+  "teamviewerId": null,
+  "teamviewerPassword": null,
+  "anyviewerId": null,
+  "anyviewerPassword": null,
+  "server": "WINDOWS",
+  "serverUsername": "Administrator",
+  "serverPassword": "win-pass-123",
+  "dbUser": "sa",
+  "dbPassword": "db-pass-123",
+  "notes": "Servidor de produção — manipular com cuidado",
+  "sentinelUrl": "http://192.168.1.100:9000",
+  "sentinelToken": "sentinel-bearer-token",
+  "createdBy": "{{adminUserId}}"
+}
+
+### Criar cliente com TeamViewer e acesso Linux (ADMIN)
+POST {{baseUrl}}/api/clients
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "name": "Cliente XYZ SA",
+  "anydeskId": null,
+  "anydeskPassword": null,
+  "teamviewerId": "987654321",
+  "teamviewerPassword": "tv-pass",
+  "anyviewerId": null,
+  "anyviewerPassword": null,
+  "server": "LINUX",
+  "serverUsername": "root",
+  "serverPassword": "linux-pass-456",
+  "dbUser": "postgres",
+  "dbPassword": "pg-pass-456",
+  "notes": null,
+  "sentinelUrl": null,
+  "sentinelToken": null,
+  "createdBy": "{{adminUserId}}"
+}
+
+### Atualizar cliente (ADMIN)
+PUT {{baseUrl}}/api/clients/{{clientId}}
+Authorization: Bearer {{token}}
+Content-Type: {{contentType}}
+
+{
+  "name": "Cliente ABC Ltda — Atualizado",
+  "anydeskId": "123456789",
+  "anydeskPassword": "nova-anydesk-pass",
+  "teamviewerId": null,
+  "teamviewerPassword": null,
+  "anyviewerId": null,
+  "anyviewerPassword": null,
+  "server": "WINDOWS",
+  "serverUsername": "Administrator",
+  "serverPassword": "nova-win-pass",
+  "dbUser": "sa",
+  "dbPassword": "novo-db-pass",
+  "notes": "Atualizado em abril/2026",
+  "sentinelUrl": "http://192.168.1.100:9000",
+  "sentinelToken": "novo-sentinel-token"
+}
+
+### Desativar cliente — soft delete (ADMIN)
+DELETE {{baseUrl}}/api/clients/{{clientId}}
+Authorization: Bearer {{token}}
