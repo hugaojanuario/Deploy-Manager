@@ -36,8 +36,8 @@ public class AuditLog {
     private Client client;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "request_id", foreignKey = @ForeignKey(name = "fk_request"))
-    private AccessRequest request;
+    @JoinColumn(name = "requester_id", foreignKey = @ForeignKey(name = "fk_requester"))
+    private AccessRequest requester;
 
     private String detail;
 
