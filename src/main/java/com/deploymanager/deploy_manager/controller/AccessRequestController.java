@@ -38,24 +38,19 @@ public class AccessRequestController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<AccessRequestResponseDTO>> getAll(
-            @RequestParam(required = false) AccessStatus status,
-            @PageableDefault(size = 5) Pageable pageable) {
+    public ResponseEntity<Page<AccessRequestResponseDTO>> getAll(@RequestParam(required = false) AccessStatus status, @PageableDefault(size = 5) Pageable pageable) {
 
         return ResponseEntity.ok(service.getAll(status, pageable));
     }
 
     @GetMapping("/mine")
-    public ResponseEntity<Page<AccessRequestResponseDTO>> getMine(
-            Authentication authentication,
-            @PageableDefault(size = 5) Pageable pageable) {
+    public ResponseEntity<Page<AccessRequestResponseDTO>> getMine(Authentication authentication, @PageableDefault(size = 5) Pageable pageable) {
 
         return ResponseEntity.ok(service.getMine(authentication.getName(), pageable));
     }
 
     @GetMapping("/pending")
-    public ResponseEntity<Page<AccessRequestResponseDTO>> getPending(
-            @PageableDefault(size = 5) Pageable pageable) {
+    public ResponseEntity<Page<AccessRequestResponseDTO>> getPending(@PageableDefault(size = 5) Pageable pageable) {
 
         return ResponseEntity.ok(service.getPending(pageable));
     }
@@ -66,18 +61,13 @@ public class AccessRequestController {
     }
 
     @PatchMapping("/{id}/approve")
-    public ResponseEntity<ApprovedAccessResponseDTO> approve(
-            @PathVariable UUID id,
-            Authentication authentication) {
+    public ResponseEntity<ApprovedAccessResponseDTO> approve(@PathVariable UUID id, Authentication authentication) {
 
         return ResponseEntity.ok(service.approve(id, authentication.getName()));
     }
 
     @PatchMapping("/{id}/reject")
-    public ResponseEntity<AccessRequestResponseDTO> reject(
-            @PathVariable UUID id,
-            @RequestBody @Valid RejectAccessRequestDTO request,
-            Authentication authentication) {
+    public ResponseEntity<AccessRequestResponseDTO> reject(@PathVariable UUID id, @RequestBody @Valid RejectAccessRequestDTO request, Authentication authentication) {
 
         return ResponseEntity.ok(service.reject(id, request, authentication.getName()));
     }
