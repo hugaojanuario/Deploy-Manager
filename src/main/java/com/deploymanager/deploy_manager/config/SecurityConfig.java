@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -41,7 +43,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception{
         return http
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configure(http))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
@@ -66,22 +68,27 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/clients/{id}").hasRole("ADMIN")
 
                         //AuditLog
-                        .requestMatchers(HttpMethod.GET, "api/audit").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "api/audit/{id}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/audit").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/audit/{id}").hasRole("ADMIN")
 
                         //AccessRequest
-                        .requestMatchers(HttpMethod.POST, "/api/access-request").hasRole("USER")
-                        .requestMatchers(HttpMethod.GET, "/api/access-request").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/aoi/access-request/mine").hasRole("USER")
-                        .requestMatchers(HttpMethod.GET, "/aoi/access-request/pending").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/access-request/{id}").authenticated()
-                        .requestMatchers(HttpMethod.PATCH, "/aoi/access-request/{id}/approve").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "/aoi/access-request/{id}/reject").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/access-requests").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/api/access-requests").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/access-requests/mine").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/api/access-requests/pending").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/access-requests/{id}").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/api/access-requests/{id}/approve").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/access-requests/{id}/reject").hasRole("ADMIN")
 
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
 
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager (AuthenticationConfiguration authenticationConfiguration) throws Exception{
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean

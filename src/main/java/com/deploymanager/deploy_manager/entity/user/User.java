@@ -56,6 +56,9 @@ public class User implements UserDetails {
     private LocalDateTime updatedAt;
 
     public User(@NotBlank @Email String email, String encryptPassword, @NotNull UserRole role) {
+        this.email = email;
+        this.passwordHash = encryptPassword;
+        this.role = role;
     }
 
     @Override
@@ -68,7 +71,7 @@ public class User implements UserDetails {
 
     @Override
     public @Nullable String getPassword() {
-        return "";
+        return this.passwordHash;
     }
 
     @Override
@@ -93,6 +96,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.active;
     }
 }
