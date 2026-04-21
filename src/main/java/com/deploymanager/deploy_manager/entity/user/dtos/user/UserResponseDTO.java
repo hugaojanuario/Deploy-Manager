@@ -1,4 +1,4 @@
-package com.deploymanager.deploy_manager.entity.user.dtos;
+package com.deploymanager.deploy_manager.entity.user.dtos.user;
 
 import com.deploymanager.deploy_manager.entity.user.User;
 import com.deploymanager.deploy_manager.entity.user.enums.UserRole;

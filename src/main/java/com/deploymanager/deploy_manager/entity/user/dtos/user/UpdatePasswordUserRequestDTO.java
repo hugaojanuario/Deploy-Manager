@@ -1,4 +1,4 @@
-package com.deploymanager.deploy_manager.entity.user.dtos;
+package com.deploymanager.deploy_manager.entity.user.dtos.user;
 
 import jakarta.validation.constraints.NotBlank;
 

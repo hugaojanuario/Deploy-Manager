@@ -1,9 +1,9 @@
 package com.deploymanager.deploy_manager.controller;
 
-import com.deploymanager.deploy_manager.entity.user.dtos.CreateUserRequestDTO;
-import com.deploymanager.deploy_manager.entity.user.dtos.UpdatePasswordUserRequestDTO;
-import com.deploymanager.deploy_manager.entity.user.dtos.UpdateUserRequestDTO;
-import com.deploymanager.deploy_manager.entity.user.dtos.UserResponseDTO;
+import com.deploymanager.deploy_manager.entity.user.dtos.user.CreateUserRequestDTO;
+import com.deploymanager.deploy_manager.entity.user.dtos.user.UpdatePasswordUserRequestDTO;
+import com.deploymanager.deploy_manager.entity.user.dtos.user.UpdateUserRequestDTO;
+import com.deploymanager.deploy_manager.entity.user.dtos.user.UserResponseDTO;
 import com.deploymanager.deploy_manager.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
