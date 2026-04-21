@@ -35,6 +35,7 @@ public class AuthService implements UserDetailsService {
         }
         String encryptPassword = passwordEncoder.encode(request.password());
         User newUser = new User(request.email(), encryptPassword, UserRole.USER);
+        newUser.setName(request.name());
         newUser.setActive(true);
         this.userRepository.save(newUser);
 
