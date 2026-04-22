@@ -1,6 +1,6 @@
 package com.deploymanager.deploy_manager.config;
 
-import com.deploymanager.deploy_manager.repository.UserRepository;
+import com.deploymanager.deploy_manager.domain.user.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

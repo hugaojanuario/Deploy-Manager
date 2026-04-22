@@ -1,0 +1,31 @@
+package com.deploymanager.deploy_manager.domain.client.dtos;
+
+import com.deploymanager.deploy_manager.domain.client.Client;
+import com.deploymanager.deploy_manager.domain.client.enums.TypeServerClient;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+public record ClientPublicResponseDTO(
+        UUID id,
+        String name,
+        String anydeskId,
+        String teamviewerId,
+        String anyviewerId,
+        TypeServerClient server,
+        String notes,
+        LocalDateTime createdAt
+) {
+    public ClientPublicResponseDTO(Client client){
+        this(
+                client.getId(),
+                client.getName(),
+                client.getAnydeskId(),
+                client.getTeamviewerId(),
+                client.getAnyviewerId(),
+                client.getServer(),
+                client.getNotes(),
+                client.getCreatedAt()
+        );
+    }
+}
