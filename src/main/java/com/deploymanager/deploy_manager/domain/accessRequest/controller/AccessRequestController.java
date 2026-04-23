@@ -26,10 +26,7 @@ public class AccessRequestController {
     private final AccessRequestService service;
 
     @PostMapping
-    public ResponseEntity<AccessRequestResponseDTO> create(
-            @RequestBody @Valid CreateAccessRequestDTO request,
-            Authentication authentication,
-            UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<AccessRequestResponseDTO> create(@RequestBody @Valid CreateAccessRequestDTO request, Authentication authentication, UriComponentsBuilder uriBuilder) {
 
         var newRequest = service.create(request, authentication.getName());
         var uri = uriBuilder.path("/api/access-requests/{id}").buildAndExpand(newRequest.id()).toUri();

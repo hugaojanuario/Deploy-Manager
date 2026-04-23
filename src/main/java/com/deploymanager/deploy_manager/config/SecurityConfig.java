@@ -58,6 +58,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/users/{id}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/users").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/users/{id}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/users").hasRole("ADMIN")
 
                         //Client
@@ -83,7 +84,6 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
-
     }
 
     @Bean
