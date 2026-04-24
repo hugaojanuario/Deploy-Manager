@@ -10,6 +10,9 @@ import com.deploymanager.deploy_manager.domain.client.Client;
 import com.deploymanager.deploy_manager.domain.user.User;
 import com.deploymanager.deploy_manager.domain.accessRequest.repository.AccessRequestRepository;
 import com.deploymanager.deploy_manager.domain.client.repository.ClientRepository;
+import com.deploymanager.deploy_manager.domain.kafka.KafkaProducerService;
+import com.deploymanager.deploy_manager.domain.kafka.events.AccessRequestEvent;
+import com.deploymanager.deploy_manager.domain.kafka.events.AccessResponseEvent;
 import com.deploymanager.deploy_manager.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +29,7 @@ public class AccessRequestService {
     private final AccessRequestRepository repository;
     private final ClientRepository clientRepository;
     private final UserRepository userRepository;
+    private final KafkaProducerService kafkaProducerService;
 
     public AccessRequestResponseDTO create(CreateAccessRequestDTO request, String requesterEmail) {
         User requester = userRepository.findByEmail(requesterEmail)
@@ -41,6 +45,14 @@ public class AccessRequestService {
         accessRequest.setStatus(AccessStatus.PENDING);
 
         AccessRequest saved = repository.save(accessRequest);
+
+        kafkaProducerService.publishAccessRequestEvent(new AccessRequestEvent(
+                saved.getId(),
+                saved.getRequester().getId(),
+                saved.getClient().getId(),
+                saved.getReason(),
+                saved.getRequestedAt()
+        ));
 
         return new AccessRequestResponseDTO(saved);
     }
@@ -84,6 +96,15 @@ public class AccessRequestService {
 
         AccessRequest saved = repository.save(accessRequest);
 
+        kafkaProducerService.publishAccessResponseEvent(new AccessResponseEvent(
+                saved.getId(),
+                saved.getRequester().getId(),
+                saved.getClient().getId(),
+                saved.getStatus(),
+                saved.getRespondedAt(),
+                saved.getExpiresAt()
+        ));
+
         return new ApprovedAccessResponseDTO(saved);
     }
 
@@ -99,6 +120,15 @@ public class AccessRequestService {
         accessRequest.setRespondedAt(LocalDateTime.now());
 
         AccessRequest saved = repository.save(accessRequest);
+
+        kafkaProducerService.publishAccessResponseEvent(new AccessResponseEvent(
+                saved.getId(),
+                saved.getRequester().getId(),
+                saved.getClient().getId(),
+                saved.getStatus(),
+                saved.getRespondedAt(),
+                null
+        ));
 
         return new AccessRequestResponseDTO(saved);
     }
