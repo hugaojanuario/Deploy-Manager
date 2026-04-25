@@ -1,5 +1,8 @@
 package com.deploymanager.deploy_manager.domain.client.service;
 
+import com.deploymanager.deploy_manager.domain.auditLog.dtos.CreateAuditLogRequestDTO;
+import com.deploymanager.deploy_manager.domain.auditLog.enums.AuditAction;
+import com.deploymanager.deploy_manager.domain.auditLog.service.AuditLogService;
 import com.deploymanager.deploy_manager.domain.client.Client;
 import com.deploymanager.deploy_manager.domain.client.dtos.ClientPrivateResponseDTO;
 import com.deploymanager.deploy_manager.domain.client.dtos.ClientPublicResponseDTO;
@@ -21,6 +24,7 @@ public class ClientService {
 
     private final ClientRepository clientRepository;
     private final UserRepository userRepository;
+    private final AuditLogService auditLogService;
 
     public ClientPrivateResponseDTO create (CreateClientRequestDTO request){
         User user = userRepository.findById(request.createdBy())
@@ -47,6 +51,15 @@ public class ClientService {
 
         Client saved = clientRepository.save(client);
 
+        auditLogService.log(new CreateAuditLogRequestDTO(
+                user.getId(),
+                AuditAction.CLIENT_CREATED,
+                saved.getId(),
+                null,
+                null,
+                null
+        ));
+
         return new ClientPrivateResponseDTO(saved);
     }
 
@@ -72,8 +85,11 @@ public class ClientService {
         return new ClientPublicResponseDTO(client);
     }
 
-    public ClientPrivateResponseDTO update (UUID id, UpdateClientRequestDTO request){
+    public ClientPrivateResponseDTO update (UUID id, UpdateClientRequestDTO request, String actorEmail){
         Client client = clientRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException());
+
+        User actor = userRepository.findByEmail(actorEmail)
                 .orElseThrow(() -> new RuntimeException());
 
         if (request.name() != null) client.setName(request.name());
@@ -94,16 +110,37 @@ public class ClientService {
 
         Client updated = clientRepository.save(client);
 
+        auditLogService.log(new CreateAuditLogRequestDTO(
+                actor.getId(),
+                AuditAction.CLIENT_UPDATED,
+                updated.getId(),
+                null,
+                null,
+                null
+        ));
+
         return new ClientPrivateResponseDTO(updated);
     }
 
-    public void softDelete (UUID id){
+    public void softDelete (UUID id, String actorEmail){
         Client client = clientRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException());
+
+        User actor = userRepository.findByEmail(actorEmail)
                 .orElseThrow(() -> new RuntimeException());
 
         client.setActive(false);
 
         clientRepository.save(client);
+
+        auditLogService.log(new CreateAuditLogRequestDTO(
+                actor.getId(),
+                AuditAction.CLIENT_UPDATED,
+                client.getId(),
+                null,
+                null,
+                null
+        ));
     }
 
 }

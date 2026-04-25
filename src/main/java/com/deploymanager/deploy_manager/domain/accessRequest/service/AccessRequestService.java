@@ -6,6 +6,9 @@ import com.deploymanager.deploy_manager.domain.accessRequest.dtos.ApprovedAccess
 import com.deploymanager.deploy_manager.domain.accessRequest.dtos.CreateAccessRequestDTO;
 import com.deploymanager.deploy_manager.domain.accessRequest.dtos.RejectAccessRequestDTO;
 import com.deploymanager.deploy_manager.domain.accessRequest.enums.AccessStatus;
+import com.deploymanager.deploy_manager.domain.auditLog.dtos.CreateAuditLogRequestDTO;
+import com.deploymanager.deploy_manager.domain.auditLog.enums.AuditAction;
+import com.deploymanager.deploy_manager.domain.auditLog.service.AuditLogService;
 import com.deploymanager.deploy_manager.domain.client.Client;
 import com.deploymanager.deploy_manager.domain.user.User;
 import com.deploymanager.deploy_manager.domain.accessRequest.repository.AccessRequestRepository;
@@ -30,6 +33,7 @@ public class AccessRequestService {
     private final ClientRepository clientRepository;
     private final UserRepository userRepository;
     private final KafkaProducerService kafkaProducerService;
+    private final AuditLogService auditLogService;
 
     public AccessRequestResponseDTO create(CreateAccessRequestDTO request, String requesterEmail) {
         User requester = userRepository.findByEmail(requesterEmail)
@@ -52,6 +56,15 @@ public class AccessRequestService {
                 saved.getClient().getId(),
                 saved.getReason(),
                 saved.getRequestedAt()
+        ));
+
+        auditLogService.log(new CreateAuditLogRequestDTO(
+                requester.getId(),
+                AuditAction.ACCESS_REQUEST,
+                client.getId(),
+                saved.getId(),
+                null,
+                null
         ));
 
         return new AccessRequestResponseDTO(saved);
@@ -105,6 +118,15 @@ public class AccessRequestService {
                 saved.getExpiresAt()
         ));
 
+        auditLogService.log(new CreateAuditLogRequestDTO(
+                approver.getId(),
+                AuditAction.ACCESS_APPROVED,
+                saved.getClient().getId(),
+                saved.getId(),
+                null,
+                null
+        ));
+
         return new ApprovedAccessResponseDTO(saved);
     }
 
@@ -128,6 +150,15 @@ public class AccessRequestService {
                 saved.getClient().getId(),
                 saved.getStatus(),
                 saved.getRespondedAt(),
+                null
+        ));
+
+        auditLogService.log(new CreateAuditLogRequestDTO(
+                approver.getId(),
+                AuditAction.ACCESS_REJECTED,
+                saved.getClient().getId(),
+                saved.getId(),
+                request.rejectReason(),
                 null
         ));
 

@@ -39,16 +39,14 @@ public class AuditLogService {
                 ? accessRequestRepository.findById(request.requester()).orElse(null)
                 : null;
 
-        AuditLog auditLog = new AuditLog(
-                null,
-                actor,
-                request.action(),
-                client,
-                access,
-                request.detail(),
-                request.ipAddress(),
-                null
-        );
+        AuditLog auditLog = AuditLog.builder()
+                .actor(actor)
+                .action(request.action())
+                .client(client)
+                .accessRequest(access)
+                .detail(request.detail())
+                .ipAddress(request.ipAddress())
+                .build();
 
         auditLogRepository.save(auditLog);
     }

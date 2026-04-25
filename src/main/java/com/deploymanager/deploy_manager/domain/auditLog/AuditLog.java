@@ -5,9 +5,7 @@ import com.deploymanager.deploy_manager.domain.auditLog.enums.AuditAction;
 import com.deploymanager.deploy_manager.domain.client.Client;
 import com.deploymanager.deploy_manager.domain.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -16,6 +14,8 @@ import java.util.UUID;
 @Entity
 @Table(name = "audit_logs")
 @Getter
+@Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuditLog {
@@ -37,7 +37,7 @@ public class AuditLog {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requester_id", foreignKey = @ForeignKey(name = "fk_requester"))
-    private AccessRequest requester;
+    private AccessRequest accessRequest;
 
     private String detail;
 

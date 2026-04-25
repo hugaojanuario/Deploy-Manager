@@ -54,15 +54,15 @@ public class ClientController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity <ClientPrivateResponseDTO> update (@PathVariable UUID id, @RequestBody @Valid UpdateClientRequestDTO request){
-        var user = service.update(id, request);
+    public ResponseEntity <ClientPrivateResponseDTO> update (@PathVariable UUID id, @RequestBody @Valid UpdateClientRequestDTO request, Authentication authentication){
+        var user = service.update(id, request, authentication.getName());
 
         return ResponseEntity.ok().body(user);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity <Void> softDelete (@PathVariable UUID id){
-        service.softDelete(id);
+    public ResponseEntity <Void> softDelete (@PathVariable UUID id, Authentication authentication){
+        service.softDelete(id, authentication.getName());
         return ResponseEntity.noContent().build();
     }
 }
