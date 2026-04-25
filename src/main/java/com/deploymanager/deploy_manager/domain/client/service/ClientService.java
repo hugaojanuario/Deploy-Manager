@@ -11,6 +11,7 @@ import com.deploymanager.deploy_manager.domain.client.dtos.UpdateClientRequestDT
 import com.deploymanager.deploy_manager.domain.user.User;
 import com.deploymanager.deploy_manager.domain.client.repository.ClientRepository;
 import com.deploymanager.deploy_manager.domain.user.repository.UserRepository;
+import com.deploymanager.deploy_manager.infra.crypto.CryptoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +26,7 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final UserRepository userRepository;
     private final AuditLogService auditLogService;
+    private final CryptoService cryptoService;
 
     public ClientPrivateResponseDTO create (CreateClientRequestDTO request){
         User user = userRepository.findById(request.createdBy())
@@ -34,19 +36,19 @@ public class ClientService {
         client.setCreatedBy(user);
         client.setName(request.name());
         client.setAnydeskId(request.anydeskId());
-        client.setAnydeskPassword(request.anydeskPassword());
+        client.setAnydeskPassword(cryptoService.encrypt(request.anydeskPassword()));
         client.setTeamviewerId(request.teamviewerId());
-        client.setTeamviewerPassword(request.teamviewerPassword());
+        client.setTeamviewerPassword(cryptoService.encrypt(request.teamviewerPassword()));
         client.setAnyviewerId(request.anyviewerId());
-        client.setAnyviewerPassword(request.anyviewerPassword());
+        client.setAnyviewerPassword(cryptoService.encrypt(request.anyviewerPassword()));
         client.setServer(request.server());
         client.setServerUsername(request.serverUsername());
-        client.setServerPassword(request.serverPassword());
+        client.setServerPassword(cryptoService.encrypt(request.serverPassword()));
         client.setDbUser(request.dbUser());
-        client.setDbPassword(request.dbPassword());
+        client.setDbPassword(cryptoService.encrypt(request.dbPassword()));
         client.setNotes(request.notes());
         client.setSentinelUrl(request.sentinelUrl());
-        client.setSentinelToken(request.sentinelToken());
+        client.setSentinelToken(cryptoService.encrypt(request.sentinelToken()));
         client.setActive(true);
 
         Client saved = clientRepository.save(client);
@@ -60,11 +62,16 @@ public class ClientService {
                 null
         ));
 
+        decryptFields(saved);
+
         return new ClientPrivateResponseDTO(saved);
     }
 
     public Page<ClientPrivateResponseDTO> getAllForAdmin (Pageable pageable){
-        return clientRepository.findByActiveTrue(pageable).map(ClientPrivateResponseDTO:: new);
+        return clientRepository.findByActiveTrue(pageable).map(client -> {
+            decryptFields(client);
+            return new ClientPrivateResponseDTO(client);
+        });
     }
 
     public Page<ClientPublicResponseDTO> getAllForUser (Pageable pageable){
@@ -74,6 +81,8 @@ public class ClientService {
     public ClientPrivateResponseDTO getByIdForAdmin (UUID id){
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException());
+
+        decryptFields(client);
 
         return new ClientPrivateResponseDTO(client);
     }
@@ -94,19 +103,19 @@ public class ClientService {
 
         if (request.name() != null) client.setName(request.name());
         if (request.anydeskId() != null) client.setAnydeskId(request.anydeskId());
-        if (request.anydeskPassword() != null) client.setAnydeskPassword(request.anydeskPassword());
+        if (request.anydeskPassword() != null) client.setAnydeskPassword(cryptoService.encrypt(request.anydeskPassword()));
         if (request.teamviewerId() != null) client.setTeamviewerId(request.teamviewerId());
-        if (request.teamviewerPassword() != null) client.setTeamviewerPassword(request.teamviewerPassword());
+        if (request.teamviewerPassword() != null) client.setTeamviewerPassword(cryptoService.encrypt(request.teamviewerPassword()));
         if (request.anyviewerId() != null) client.setAnyviewerId(request.anyviewerId());
-        if (request.anyviewerPassword() != null) client.setAnyviewerPassword(request.anyviewerPassword());
+        if (request.anyviewerPassword() != null) client.setAnyviewerPassword(cryptoService.encrypt(request.anyviewerPassword()));
         if (request.server() != null) client.setServer(request.server());
         if (request.serverUsername() != null) client.setServerUsername(request.serverUsername());
-        if (request.serverPassword() != null) client.setServerPassword(request.serverPassword());
+        if (request.serverPassword() != null) client.setServerPassword(cryptoService.encrypt(request.serverPassword()));
         if (request.dbUser() != null) client.setDbUser(request.dbUser());
-        if (request.dbPassword() != null) client.setDbPassword(request.dbPassword());
+        if (request.dbPassword() != null) client.setDbPassword(cryptoService.encrypt(request.dbPassword()));
         if (request.notes() != null) client.setNotes(request.notes());
         if (request.sentinelUrl() != null) client.setSentinelUrl(request.sentinelUrl());
-        if (request.sentinelToken() != null) client.setSentinelToken(request.sentinelToken());
+        if (request.sentinelToken() != null) client.setSentinelToken(cryptoService.encrypt(request.sentinelToken()));
 
         Client updated = clientRepository.save(client);
 
@@ -118,6 +127,8 @@ public class ClientService {
                 null,
                 null
         ));
+
+        decryptFields(updated);
 
         return new ClientPrivateResponseDTO(updated);
     }
@@ -141,6 +152,15 @@ public class ClientService {
                 null,
                 null
         ));
+    }
+
+    private void decryptFields(Client client) {
+        client.setAnydeskPassword(cryptoService.decrypt(client.getAnydeskPassword()));
+        client.setTeamviewerPassword(cryptoService.decrypt(client.getTeamviewerPassword()));
+        client.setAnyviewerPassword(cryptoService.decrypt(client.getAnyviewerPassword()));
+        client.setServerPassword(cryptoService.decrypt(client.getServerPassword()));
+        client.setDbPassword(cryptoService.decrypt(client.getDbPassword()));
+        client.setSentinelToken(cryptoService.decrypt(client.getSentinelToken()));
     }
 
 }
