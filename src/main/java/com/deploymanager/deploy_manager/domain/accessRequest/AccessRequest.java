@@ -42,6 +42,8 @@ public class AccessRequest {
 
     private String reason;
 
+    private String rejectReason;
+
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime requestedAt;

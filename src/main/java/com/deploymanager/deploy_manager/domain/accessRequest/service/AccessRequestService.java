@@ -118,6 +118,7 @@ public class AccessRequestService {
         accessRequest.setApprover(approver);
         accessRequest.setStatus(AccessStatus.REJECTED);
         accessRequest.setRespondedAt(LocalDateTime.now());
+        accessRequest.setRejectReason(request.rejectReason());
 
         AccessRequest saved = repository.save(accessRequest);
 

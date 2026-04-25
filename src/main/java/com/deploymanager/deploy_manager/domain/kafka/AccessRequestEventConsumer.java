@@ -16,6 +16,4 @@ public class AccessRequestEventConsumer {
     public void consume (AccessRequestEvent event){
         simpMessagingTemplate.convertAndSend("/topic/access-requests", event);
     }
-
-
 }
