@@ -5,7 +5,6 @@ import com.deploymanager.deploy_manager.domain.user.dtos.auth.AuthRegisterReques
 import com.deploymanager.deploy_manager.domain.user.dtos.auth.AuthRegisterResponseDTO;
 import com.deploymanager.deploy_manager.domain.user.enums.UserRole;
 import com.deploymanager.deploy_manager.domain.user.repository.UserRepository;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,10 +24,10 @@ public class AuthService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)
-                .orElseThrow(() -> new RuntimeException());
+                .orElseThrow(() -> new UsernameNotFoundException("Username not found."));
     }
 
-    public AuthRegisterResponseDTO register (@Valid AuthRegisterRequestDTO request){
+    public AuthRegisterResponseDTO register (AuthRegisterRequestDTO request){
 
         if (userRepository.findByEmail(request.email()).isPresent()){
             throw  new ResponseStatusException(HttpStatus.CONFLICT, "Email already registred");
