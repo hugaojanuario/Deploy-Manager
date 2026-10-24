@@ -3,8 +3,8 @@ package com.deploymanager.deploy_manager.domain.user.controller;
 import com.deploymanager.deploy_manager.config.TokenService;
 import com.deploymanager.deploy_manager.domain.user.User;
 import com.deploymanager.deploy_manager.domain.user.dtos.auth.AuthDTO;
+import com.deploymanager.deploy_manager.domain.user.dtos.auth.AuthRegisterRequestDTO;
 import com.deploymanager.deploy_manager.domain.user.dtos.auth.AuthResponse;
-import com.deploymanager.deploy_manager.domain.user.dtos.user.CreateUserRequestDTO;
 import com.deploymanager.deploy_manager.domain.user.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +37,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity register (@RequestBody @Valid CreateUserRequestDTO request){
+    public ResponseEntity register (@RequestBody @Valid AuthRegisterRequestDTO request){
         var newUser = authService.register(request);
 
         return ResponseEntity.ok().body(newUser);

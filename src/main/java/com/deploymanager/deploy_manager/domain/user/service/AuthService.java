@@ -1,8 +1,8 @@
 package com.deploymanager.deploy_manager.domain.user.service;
 
 import com.deploymanager.deploy_manager.domain.user.User;
+import com.deploymanager.deploy_manager.domain.user.dtos.auth.AuthRegisterRequestDTO;
 import com.deploymanager.deploy_manager.domain.user.dtos.auth.AuthRegisterResponseDTO;
-import com.deploymanager.deploy_manager.domain.user.dtos.user.CreateUserRequestDTO;
 import com.deploymanager.deploy_manager.domain.user.enums.UserRole;
 import com.deploymanager.deploy_manager.domain.user.repository.UserRepository;
 import jakarta.validation.Valid;
@@ -28,7 +28,7 @@ public class AuthService implements UserDetailsService {
                 .orElseThrow(() -> new RuntimeException());
     }
 
-    public AuthRegisterResponseDTO register (@Valid CreateUserRequestDTO request){
+    public AuthRegisterResponseDTO register (@Valid AuthRegisterRequestDTO request){
 
         if (userRepository.findByEmail(request.email()).isPresent()){
             throw  new ResponseStatusException(HttpStatus.CONFLICT, "Email already registred");
