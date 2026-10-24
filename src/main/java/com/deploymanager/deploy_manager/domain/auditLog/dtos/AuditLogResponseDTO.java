@@ -11,7 +11,7 @@ public record AuditLogResponseDTO(
         UUID actor,
         AuditAction action,
         UUID client,
-        UUID requester,
+        UUID accessRequest,
         String detail,
         String ipAddress,
         LocalDateTime createdAt
@@ -22,7 +22,7 @@ public record AuditLogResponseDTO(
                 log.getActor()!= null ? log.getActor().getId() : null,
                 log.getAction(),
                 log.getClient() != null ? log.getClient().getId() : null,
-                log.getRequester() != null ? log.getRequester().getId() : null,
+                log.getAccessRequest() != null ? log.getAccessRequest().getId() : null,
                 log.getDetail(),
                 log.getIpAddress(),
                 log.getCreatedAt()
