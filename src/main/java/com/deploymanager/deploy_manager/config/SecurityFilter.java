@@ -1,5 +1,6 @@
 package com.deploymanager.deploy_manager.config;
 
+import com.deploymanager.deploy_manager.domain.user.User;
 import com.deploymanager.deploy_manager.domain.user.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -28,9 +29,9 @@ public class SecurityFilter extends OncePerRequestFilter {
         if (token != null){
             var login = tokenService.validateToken(token);
             if (login != null){
-                UserDetails user = userRepository.findByEmail(login)
-                        .orElseThrow(() -> new RuntimeException());
-                if (user != null){
+                UserDetails user = userRepository.findByEmail(login).orElse(null);
+
+                if (user != null && user.isEnabled()){
                     var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
